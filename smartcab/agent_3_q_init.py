@@ -12,9 +12,9 @@ class LearningAgent(Agent):
         self.planner = RoutePlanner(self.env, self)  # simple route planner to get next_waypoint
         # TODO: Initialize any additional variables here
         self.state = {}
-        self.learning_rate = 0.8
-        self.discount_rate = 0.2
-        self.exploration_rate = 0.01
+        self.learning_rate = 0.6
+        self.discount_rate = 0.6
+        self.exploration_rate = 0.05
         self.q_value_dic = {}
 
     def reset(self, destination=None):
@@ -103,10 +103,10 @@ def run():
     # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
 
     # Now simulate it
-    sim = Simulator(e, update_delay=0, display=False)  # create simulator (uses pygame when display=True, if available)
+    sim = Simulator(e, update_delay=1, display=True)  # create simulator (uses pygame when display=True, if available)
     # NOTE: To speed up simulation, reduce update_delay and/or set display=False
 
-    trials = 100
+    trials = 10
     sim.run(n_trials=trials)  # run for a specified number of trials
     # NOTE: To quit midway, press Esc or close pygame window, or hit Ctrl+C on the command-line
     print '******************************************'
@@ -115,8 +115,6 @@ def run():
     print 'Successful trials: {}'.format(e.suc)
     print '******************************************'
     print 'Failed trials: {}'.format(e.fail)
-    print '******************************************'
-    print 'Traffic issues: {}'.format(e.traffic_issue)
     print '******************************************'
 
 
