@@ -57,12 +57,12 @@ class LearningAgent(Agent):
         return optimal_action
 
     def max_q_value_among_actions(self, state):
-        max = None
+        max_q = None
         for action in Environment.valid_actions:
             tmp = self.get_q_value(state, action)
-            if (max is None) or (tmp > max):
-                max = tmp
-        return max
+            if (max_q is None) or (tmp > max_q):
+                max_q = tmp
+        return max_q
 
     def get_q_value(self, state, action):
         key = self.build_format_key(state, action)

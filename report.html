@@ -11791,6 +11791,8 @@ div#notebook {
 <p>（说明：针对本项目中的4个主要问题，smartcab目录下有对应的四个agent代码类，分别是agent_1_random.py,agent_2_decide_state.py,agent_3_q_init.py,agent_4_parameter_optimized.py，对应每一题都有相应的改动）</p>
 <p>智能车会在环境中“随机游走”，当取消了时间限制后，智能车总是能达到目标位置，但通常花费时间非常多。</p>
 <p>由于环境大小有限，因此理论上只要有无限的时间，随机游走策略总能保证智能车达到目的地；但从几次观察结果来看，这个时间比预期的要长得多。</p>
+<p><strong>（After Review）</strong></p>
+<p>可以将enforce_deadline设置为True，update_delay设置为0，display设置为False，尝试运行多次agent_1_random.py，观察最后的统计值，可以的出随机游走的智能车的成绩：规定时间内到达平均20次，失败80次，平均交通违章次数770</p>
 
 </div>
 </div>
@@ -11825,6 +11827,8 @@ div#notebook {
 <p>首先，下一目标点是必要的状态，没有这个变量，智能车就无法实时获取到达目标地点的指示。</p>
 <p>其次，交通灯状态也是必须的，这个状态和路口车况共同决定了智能车采取的行动是否可以立即被执行。</p>
 <p>最后，路口车况中，对面车况和左方车况也是需要考虑的因素：智能车可以左转时，如果路口对面有车直行，则需要等待对面直行后再左转；当交通灯为红灯且智能车决定右转时，如果左方有车直行，则智能车也需要让行。需要说明的是，路口右方的车况任何情况下都不会影响智能车的决策，因此不予考虑。</p>
+<p><strong>（After Review）</strong></p>
+<p>不考虑将deadline作为状态的最主要的原因是，deadline的状态太多了，如可选题目（下一题）的计算结果可知，选定的状态决定了智能车有384种动作-状态组合，如果再乘以deadline的所有可能，得到的总状态数会非常多，相应的学习矩阵也会非常大，矩阵完成收敛需要很长的训练时间。</p>
 
 </div>
 </div>
@@ -11918,25 +11922,29 @@ div#notebook {
 <p><strong>回答:</strong></p>
 <p>首先按照题目要求，将测试次数调整至100，更新延时调整为0，display设置为False。</p>
 <p>按照grid-search参数搜索法，选定学习率(0.4,0.6,0.8),折扣率(0.2,0.4,0.6)，探索率（0.01,0.05），共18组实验：</p>
-<p>alpha:0.4,gamma:0.2,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/15
-alpha:0.6,gamma:0.2,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/17
-alpha:0.8,gamma:0.2,epsilon:0.01-----Suc/Fail/TrafficIssue:100/0/15
-alpha:0.4,gamma:0.4,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/16
-alpha:0.6,gamma:0.4,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/16
-alpha:0.8,gamma:0.4,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/20
-alpha:0.4,gamma:0.6,epsilon:0.01-----Suc/Fail/TrafficIssue:95/5/16
-alpha:0.6,gamma:0.6,epsilon:0.01-----Suc/Fail/TrafficIssue:94/6/18
-alpha:0.8,gamma:0.6,epsilon:0.01-----Suc/Fail/TrafficIssue:97/3/22
-alpha:0.4,gamma:0.2,epsilon:0.05-----Suc/Fail/TrafficIssue:98/2/30
-alpha:0.6,gamma:0.2,epsilon:0.05-----Suc/Fail/TrafficIssue:98/2/35
-alpha:0.8,gamma:0.2,epsilon:0.05-----Suc/Fail/TrafficIssue:98/2/36
-alpha:0.4,gamma:0.4,epsilon:0.05-----Suc/Fail/TrafficIssue:95/5/30
-alpha:0.6,gamma:0.4,epsilon:0.05-----Suc/Fail/TrafficIssue:96/4/36
-alpha:0.8,gamma:0.4,epsilon:0.05-----Suc/Fail/TrafficIssue:97/3/32
-alpha:0.4,gamma:0.6,epsilon:0.05-----Suc/Fail/TrafficIssue:91/9/30
-alpha:0.6,gamma:0.6,epsilon:0.05-----Suc/Fail/TrafficIssue:93/7/38
-alpha:0.8,gamma:0.6,epsilon:0.05-----Suc/Fail/TrafficIssue:94/6//32</p>
+<p>1：alpha:0.4,gamma:0.2,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/15
+2：alpha:0.6,gamma:0.2,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/17
+3：alpha:0.8,gamma:0.2,epsilon:0.01-----Suc/Fail/TrafficIssue:100/0/15
+4：alpha:0.4,gamma:0.4,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/16
+5：alpha:0.6,gamma:0.4,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/16
+6：alpha:0.8,gamma:0.4,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/20
+7：alpha:0.4,gamma:0.6,epsilon:0.01-----Suc/Fail/TrafficIssue:95/5/16
+8：alpha:0.6,gamma:0.6,epsilon:0.01-----Suc/Fail/TrafficIssue:94/6/18
+9：alpha:0.8,gamma:0.6,epsilon:0.01-----Suc/Fail/TrafficIssue:97/3/22
+10：alpha:0.4,gamma:0.2,epsilon:0.05-----Suc/Fail/TrafficIssue:98/2/30
+11：alpha:0.6,gamma:0.2,epsilon:0.05-----Suc/Fail/TrafficIssue:98/2/35
+12：alpha:0.8,gamma:0.2,epsilon:0.05-----Suc/Fail/TrafficIssue:98/2/36
+13：alpha:0.4,gamma:0.4,epsilon:0.05-----Suc/Fail/TrafficIssue:95/5/30
+14：alpha:0.6,gamma:0.4,epsilon:0.05-----Suc/Fail/TrafficIssue:96/4/36
+15：alpha:0.8,gamma:0.4,epsilon:0.05-----Suc/Fail/TrafficIssue:97/3/32
+16：alpha:0.4,gamma:0.6,epsilon:0.05-----Suc/Fail/TrafficIssue:91/9/30
+17：alpha:0.6,gamma:0.6,epsilon:0.05-----Suc/Fail/TrafficIssue:93/7/38
+18：alpha:0.8,gamma:0.6,epsilon:0.05-----Suc/Fail/TrafficIssue:94/6//32</p>
 <p>但从数值上看，alpha:0.8,gamma:0.2,epsilon:0.01，这个参数组合的表现是最好的。（实际操作中我将测试次数调整为1000，该组参数的平均成功次数达到995次以上）</p>
+<p><strong>(After Review) </strong></p>
+<p>alpha是学习率，这个数值越大说明智能体会保留越少的之前的训练结果，可以从13-15或16-18行的实验结果看出，当gamma和epsilon固定时，alpha的增大会提升成功率，即保留80%的当前训练结果比保留40%或60%的效果会更好些。</p>
+<p>gamma是折扣因子，这个值越大，智能体就会更重视记忆中的利益，越小，就会更重视眼前的利益。对比10，13，16（或11,14,17或12,15,18）可以看出，gamma的值越小，成功率响应会越高，即本题中应当更重视眼前的利益，选gamma为0.2。</p>
+<p>epsilon是探索率，为了避免智能体完全依赖训练结果，而设置的让智能体概率性的随机探索的机制。很明显的，随机动作越多，成功抵达目的地的不确定性也就越大，比较1-9行以及10-18行的成功平均值和交通违章平均值可以看出，选择0.01作为epsilon是比较合适的。</p>
 
 </div>
 </div>

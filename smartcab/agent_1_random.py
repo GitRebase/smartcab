@@ -41,16 +41,26 @@ def run():
     # Set up environment and agent
     e = Environment()  # create environment (also adds some dummy traffic)
     a = e.create_agent(LearningAgent)  # create agent
-    e.set_primary_agent(a, enforce_deadline=False)  # specify agent to track
+    # e.set_primary_agent(a, enforce_deadline=False)  # specify agent to track
+    e.set_primary_agent(a, enforce_deadline=True)  # for the purpose of calculate success rate
     # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
 
     # Now simulate it
-    sim = Simulator(e, update_delay=2, display=True)  # create simulator (uses pygame when display=True, if available)
+    # sim = Simulator(e, update_delay=2, display=True)  # create simulator (uses pygame when display=True, if available)
+    sim = Simulator(e, update_delay=0, display=False)  # for the purpose of calculate success rate
     # NOTE: To speed up simulation, reduce update_delay and/or set display=False
 
     sim.run(n_trials=100)  # run for a specified number of trials
     # NOTE: To quit midway, press Esc or close pygame window, or hit Ctrl+C on the command-line
-
+    print '******************************************'
+    print '{} trials done, statistics:'.format(100)
+    print '******************************************'
+    print 'Successful trials: {}'.format(e.suc)
+    print '******************************************'
+    print 'Failed trials: {}'.format(e.fail)
+    print '******************************************'
+    print 'Traffic issues: {}'.format(e.traffic_issue)
+    print '******************************************'
 
 if __name__ == '__main__':
     run()
