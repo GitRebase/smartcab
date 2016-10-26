@@ -3,18 +3,20 @@ from environment import Agent, Environment
 from planner import RoutePlanner
 from simulator import Simulator
 
+
 class LearningAgent(Agent):
     """An agent that learns to drive in the smartcab world."""
 
     def __init__(self, env):
-        super(LearningAgent, self).__init__(env)  # sets self.env = env, state = None, next_waypoint = None, and a default color
+        super(LearningAgent, self).__init__(
+            env)  # sets self.env = env, state = None, next_waypoint = None, and a default color
         self.color = 'red'  # override color
         self.planner = RoutePlanner(self.env, self)  # simple route planner to get next_waypoint
         # TODO: Initialize any additional variables here
         self.state = {}
-        self.learning_rate = 0.8
+        self.learning_rate = 0.6
         self.discount_rate = 0.2
-        self.exploration_rate = 0.01
+        self.exploration_rate = 0.1
         self.q_value_dic = {}
 
     def reset(self, destination=None):
@@ -93,30 +95,39 @@ class LearningAgent(Agent):
                 'oncoming': inputs['oncoming'],
                 'left': inputs['left']}
 
+
 def run():
     """Run the agent for a finite number of trials."""
 
-    # Set up environment and agent
-    e = Environment()  # create environment (also adds some dummy traffic)
-    a = e.create_agent(LearningAgent)  # create agent
-    e.set_primary_agent(a, enforce_deadline=True)  # specify agent to track
-    # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
-
-    # Now simulate it
-    sim = Simulator(e, update_delay=0, display=False)  # create simulator (uses pygame when display=True, if available)
-    # NOTE: To speed up simulation, reduce update_delay and/or set display=False
-
+    times = 10
+    sum_suc = 0
+    sum_fail = 0
+    sum_traffic_issues = 0
     trials = 100
-    sim.run(n_trials=trials)  # run for a specified number of trials
+    for i in range(0, times):
+        # Set up environment and agent
+        e = Environment()  # create environment (also adds some dummy traffic)
+        a = e.create_agent(LearningAgent)  # create agent
+        e.set_primary_agent(a, enforce_deadline=True)  # specify agent to track
+        # NOTE: You can set enforce_deadline=False while debugging to allow longer trials
+
+        # Now simulate it
+        sim = Simulator(e, update_delay=0, display=False)  # create simulator (uses pygame when display=True, if available)
+        # NOTE: To speed up simulation, reduce update_delay and/or set display=False
+
+        sim.run(n_trials=trials)  # run for a specified number of trials
+        sum_suc += e.suc
+        sum_fail += e.fail
+        sum_traffic_issues += e.traffic_issue
     # NOTE: To quit midway, press Esc or close pygame window, or hit Ctrl+C on the command-line
     print '******************************************'
-    print '{} trials done, statistics:'.format(trials)
+    print '{} times totally, each time {} trials done, statistics:'.format(times, trials)
     print '******************************************'
-    print 'Successful trials: {}'.format(e.suc)
+    print 'Successful trials: {}'.format(sum_suc)
     print '******************************************'
-    print 'Failed trials: {}'.format(e.fail)
+    print 'Failed trials: {}'.format(sum_fail)
     print '******************************************'
-    print 'Traffic issues: {}'.format(e.traffic_issue)
+    print 'Traffic issues: {}'.format(sum_traffic_issues)
     print '******************************************'
 
 

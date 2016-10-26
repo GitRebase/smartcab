@@ -11921,30 +11921,435 @@ div#notebook {
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>回答:</strong></p>
 <p>首先按照题目要求，将测试次数调整至100，更新延时调整为0，display设置为False。</p>
-<p>按照grid-search参数搜索法，选定学习率(0.4,0.6,0.8),折扣率(0.2,0.4,0.6)，探索率（0.01,0.05），共18组实验：</p>
-<p>1：alpha:0.4,gamma:0.2,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/15
-2：alpha:0.6,gamma:0.2,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/17
-3：alpha:0.8,gamma:0.2,epsilon:0.01-----Suc/Fail/TrafficIssue:100/0/15
-4：alpha:0.4,gamma:0.4,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/16
-5：alpha:0.6,gamma:0.4,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/16
-6：alpha:0.8,gamma:0.4,epsilon:0.01-----Suc/Fail/TrafficIssue:99/1/20
-7：alpha:0.4,gamma:0.6,epsilon:0.01-----Suc/Fail/TrafficIssue:95/5/16
-8：alpha:0.6,gamma:0.6,epsilon:0.01-----Suc/Fail/TrafficIssue:94/6/18
-9：alpha:0.8,gamma:0.6,epsilon:0.01-----Suc/Fail/TrafficIssue:97/3/22
-10：alpha:0.4,gamma:0.2,epsilon:0.05-----Suc/Fail/TrafficIssue:98/2/30
-11：alpha:0.6,gamma:0.2,epsilon:0.05-----Suc/Fail/TrafficIssue:98/2/35
-12：alpha:0.8,gamma:0.2,epsilon:0.05-----Suc/Fail/TrafficIssue:98/2/36
-13：alpha:0.4,gamma:0.4,epsilon:0.05-----Suc/Fail/TrafficIssue:95/5/30
-14：alpha:0.6,gamma:0.4,epsilon:0.05-----Suc/Fail/TrafficIssue:96/4/36
-15：alpha:0.8,gamma:0.4,epsilon:0.05-----Suc/Fail/TrafficIssue:97/3/32
-16：alpha:0.4,gamma:0.6,epsilon:0.05-----Suc/Fail/TrafficIssue:91/9/30
-17：alpha:0.6,gamma:0.6,epsilon:0.05-----Suc/Fail/TrafficIssue:93/7/38
-18：alpha:0.8,gamma:0.6,epsilon:0.05-----Suc/Fail/TrafficIssue:94/6//32</p>
-<p>但从数值上看，alpha:0.8,gamma:0.2,epsilon:0.01，这个参数组合的表现是最好的。（实际操作中我将测试次数调整为1000，该组参数的平均成功次数达到995次以上）</p>
-<p><strong>(After Review) </strong></p>
-<p>alpha是学习率，这个数值越大说明智能体会保留越少的之前的训练结果，可以从13-15或16-18行的实验结果看出，当gamma和epsilon固定时，alpha的增大会提升成功率，即保留80%的当前训练结果比保留40%或60%的效果会更好些。</p>
-<p>gamma是折扣因子，这个值越大，智能体就会更重视记忆中的利益，越小，就会更重视眼前的利益。对比10，13，16（或11,14,17或12,15,18）可以看出，gamma的值越小，成功率响应会越高，即本题中应当更重视眼前的利益，选gamma为0.2。</p>
-<p>epsilon是探索率，为了避免智能体完全依赖训练结果，而设置的让智能体概率性的随机探索的机制。很明显的，随机动作越多，成功抵达目的地的不确定性也就越大，比较1-9行以及10-18行的成功平均值和交通违章平均值可以看出，选择0.01作为epsilon是比较合适的。</p>
+<p>按照grid-search参数搜索法，选定学习率(0.5,0.6,0.7),折扣率(0.2,0.3,0.4)，探索率（0.1,0.15,0.2），共27组实验,结果如下：</p>
+<table>
+<thead><tr>
+<th style="text-align:center">alpha</th>
+<th style="text-align:center">gamma</th>
+<th style="text-align:center">epsilon</th>
+<th style="text-align:center">成功率（10次实验平均）</th>
+<th style="text-align:center">交通违章（10次实验平均）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">96.9%</td>
+<td style="text-align:center">57.1</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">97.7%</td>
+<td style="text-align:center">51.0</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">97.2%</td>
+<td style="text-align:center">51.6</td>
+</tr>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">94.9%</td>
+<td style="text-align:center">55.9</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">96.2%</td>
+<td style="text-align:center">51.9</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">95.9%</td>
+<td style="text-align:center">53.8</td>
+</tr>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">92.2%</td>
+<td style="text-align:center">52.6</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">92.9%</td>
+<td style="text-align:center">51.0</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">93.2%</td>
+<td style="text-align:center">52.0</td>
+</tr>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">95.2%</td>
+<td style="text-align:center">75.4</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">94.5%</td>
+<td style="text-align:center">73.5</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">94.8%</td>
+<td style="text-align:center">75.6</td>
+</tr>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">90.3%</td>
+<td style="text-align:center">76.4</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">94.9%</td>
+<td style="text-align:center">75.3</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">92.4%</td>
+<td style="text-align:center">78.8</td>
+</tr>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">89.3%</td>
+<td style="text-align:center">76.7</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">90.4%</td>
+<td style="text-align:center">75.2</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">90.6%</td>
+<td style="text-align:center">77.4</td>
+</tr>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">90.5%</td>
+<td style="text-align:center">107.6</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">92.7%</td>
+<td style="text-align:center">100.7</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">92.4%</td>
+<td style="text-align:center">98.5</td>
+</tr>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">89.8%</td>
+<td style="text-align:center">105.5</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">90.0%</td>
+<td style="text-align:center">104.6</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">89.6%</td>
+<td style="text-align:center">101.3</td>
+</tr>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">85.8%</td>
+<td style="text-align:center">108.1</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">87.8%</td>
+<td style="text-align:center">101.4</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">86.9%</td>
+<td style="text-align:center">101.0</td>
+</tr>
+</tbody>
+</table>
+<p>alpha是学习率，这个数值越大说明智能体会保留越少的之前的训练结果,更重视新尝试的经验。当alpha很大时，智能体每次只参考很小一部分(1-alpha)的先前训练结果，主要靠新尝试获取经验，那么Q矩阵的元素必然不容易收敛。反之，如果alpha过小，那么智能体对于新尝试的参考很小，绝大部分的经验来源于之前的经验，显然的，这样的学习率会导致Q矩阵以非常缓慢的速度向目标收敛，效果也不会很好。因此我选择了几个接近0.5的数值进行尝试：0.4，0.5，0.6，从下表（原始表中截取）可以看到，在gamma，epsilon固定的情况下，alpha为0.7,0.6时，通常比0.5时拥有较高的或持平的成功率，并且学习率0.6,0.7的成功率表现总体持平，考虑到alpha过大可能会影响到学习矩阵的最终收敛，因此选择0.6作为学习率参数。</p>
+<table>
+<thead><tr>
+<th style="text-align:center">alpha</th>
+<th style="text-align:center">gamma</th>
+<th style="text-align:center">epsilon</th>
+<th style="text-align:center">成功率（10次实验平均）</th>
+<th style="text-align:center">交通违章（10次实验平均）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">94.9%</td>
+<td style="text-align:center">55.9</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">96.2%</td>
+<td style="text-align:center">51.9</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">95.9%</td>
+<td style="text-align:center">53.8</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr>
+<th style="text-align:center">alpha</th>
+<th style="text-align:center">gamma</th>
+<th style="text-align:center">epsilon</th>
+<th style="text-align:center">成功率（10次实验平均）</th>
+<th style="text-align:center">交通违章（10次实验平均）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">90.3%</td>
+<td style="text-align:center">76.4</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">94.9%</td>
+<td style="text-align:center">75.3</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">92.4%</td>
+<td style="text-align:center">78.8</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr>
+<th style="text-align:center">alpha</th>
+<th style="text-align:center">gamma</th>
+<th style="text-align:center">epsilon</th>
+<th style="text-align:center">成功率（10次实验平均）</th>
+<th style="text-align:center">交通违章（10次实验平均）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0.5</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">89.8%</td>
+<td style="text-align:center">105.5</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">90.0%</td>
+<td style="text-align:center">104.6</td>
+</tr>
+<tr>
+<td style="text-align:center">0.7</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">89.6%</td>
+<td style="text-align:center">101.3</td>
+</tr>
+</tbody>
+</table>
+<p>gamma是折扣因子，这个值越大，智能体就会更重视记忆中的利益，越小，就会更重视眼前的利益。此处我的考虑是，通过记忆中的利益给出的最优动作综合考虑了智能体在到达目的地和避免交通违章之间的权衡，但对于智能体的每一步决策，更重要的应该是尽量不违反交通规则从而避免事故。出于这个考虑，我认为智能车在计算当前效用值时，应该适当“短视”一些，因此我选了3个很小的gamma值：0.2,0.3，0.4。从原始数据中我截取出了下表，可以看到，比起gamma为0.4的选择，0.2,0.3的gamma值成功率通常更高，且0.2的交通违章情况更少一点，因此此处我选择了0.2作为gamma值：</p>
+<table>
+<thead><tr>
+<th style="text-align:center">alpha</th>
+<th style="text-align:center">gamma</th>
+<th style="text-align:center">epsilon</th>
+<th style="text-align:center">成功率（10次实验平均）</th>
+<th style="text-align:center">交通违章（10次实验平均）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">97.7%</td>
+<td style="text-align:center">51.0</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">96.2%</td>
+<td style="text-align:center">51.9</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">92.9%</td>
+<td style="text-align:center">51.0</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr>
+<th style="text-align:center">alpha</th>
+<th style="text-align:center">gamma</th>
+<th style="text-align:center">epsilon</th>
+<th style="text-align:center">成功率（10次实验平均）</th>
+<th style="text-align:center">交通违章（10次实验平均）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">94.5%</td>
+<td style="text-align:center">73.5</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">94.9%</td>
+<td style="text-align:center">75.3</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">90.4%</td>
+<td style="text-align:center">75.2</td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead><tr>
+<th style="text-align:center">alpha</th>
+<th style="text-align:center">gamma</th>
+<th style="text-align:center">epsilon</th>
+<th style="text-align:center">成功率（10次实验平均）</th>
+<th style="text-align:center">交通违章（10次实验平均）</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">92.7%</td>
+<td style="text-align:center">100.7</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.3</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">90.0%</td>
+<td style="text-align:center">104.6</td>
+</tr>
+<tr>
+<td style="text-align:center">0.6</td>
+<td style="text-align:center">0.4</td>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">87.8%</td>
+<td style="text-align:center">101.4</td>
+</tr>
+</tbody>
+</table>
+<p>epsilon是探索率，为了避免智能体完全依赖训练结果，而设置的让智能体概率性的随机探索的机制。很明显的，随机动作越多，成功抵达目的地的不确定性也就越大，可以计算一下探索率分别为0.1,0.15,0.2时，上述实验中的成功率和事故率的平均值，如下表所示，很明显，探索率的增高会减小成功抵达的几率和交通违章率，我认为0.1的探索率就足够了。</p>
+<table>
+<thead><tr>
+<th style="text-align:center">epsilon</th>
+<th style="text-align:center">成功率</th>
+<th style="text-align:center">交通违章</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:center">0.10</td>
+<td style="text-align:center">95.2%</td>
+<td style="text-align:center">52.9</td>
+</tr>
+<tr>
+<td style="text-align:center">0.15</td>
+<td style="text-align:center">92.5%</td>
+<td style="text-align:center">76.0</td>
+</tr>
+<tr>
+<td style="text-align:center">0.2</td>
+<td style="text-align:center">89.5%</td>
+<td style="text-align:center">103.2</td>
+</tr>
+</tbody>
+</table>
+<p>综上，最终选择的参数组合是：alpha=0.6，gamma=0.2，epsilon=0.1，这种情况下成功率为97.7%，交通事故平均值为51.0.</p>
 
 </div>
 </div>
@@ -11965,7 +12370,7 @@ div#notebook {
 <div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <p><strong>回答:</strong></p>
-<p>在当前的奖励、惩罚机制下，我认为智能车已经接近最佳策略了：99.5%以上的到达成功率和较低（当然15%也不算很低）的交通违章率还算可以接受。如果希望降低交通违章次数，可以将environment.py的违反交通规则的惩罚提高（当前是-1.0）</p>
+<p>在当前的奖励、惩罚机制下，我认为智能车已经接近最佳策略了：97.7%以上的到达成功率和较低（当然平均51也不算很低）的交通违章率还算可以接受。如果希望降低交通违章次数，可以将environment.py的违反交通规则的惩罚提高（当前是-1.0）</p>
 <p>本题中的最佳策略，我认为应该是：尽量不发生交通违章的前提下，在规定的时间内到达目的地。因为对于乘客而言，智能车的安全应该是最重要的，其次才是到达时间。相比较下，智能车能在规定时间内不发生任何事故安全抵达，比起不惜造成交通事故更快抵达目的地更合理一些。</p>
 
 </div>
